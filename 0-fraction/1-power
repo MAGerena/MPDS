@@ -1,0 +1,8 @@
+const {Console} = require("console-mpds");
+const console = new Console();
+
+const num = console.readNumber("Inserta el numerador de la fracción");
+const den = console.readNumber("Inserta el numerador de la fracción");
+const exponent = console.readNumber("Inserta el exponente:")
+
+console.writeln(`La fracción ${num}/${den} elevado a ${exponent} es la fracción ${num**exponent}/${den**exponent}`);
