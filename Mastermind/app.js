@@ -1,34 +1,35 @@
 const { Console } = require("console-mpds");
 const console = new Console();
 
-const secretCode = getSecretCode();
-proposeCode(secretCode);
+const secretCombination = getSecretCombination();
+proposeCombination(secretCombination);
 
-function getSecretCode() {
-    let secretCode
-    console.writeln("Please, insert the secret code");
+function getSecretCombination() {
+    let secretCombination
+    console.writeln("Please, insert the secret Combination");
     do {
-        secretCode = getCode();
-    } while (!validateCode(secretCode));
+        secretCombination = getCombination();
+    } while (!validateCombination(secretCombination));
 
-    return secretCode;
+    return secretCombination;
 }
 
-function getCode() {
-    let code;
+function getCombination() {
+    let Combination;
     do {
-        code = console.readString();
-    } while (!validateCode(code));
+        Combination = console.readString();
+    } while (!validateCombination(Combination));
 
-    return code;
+    return Combination;
 }
 
-function validateCode(code) {
+function validateCombination(Combination) {
     const MAX_LENGTH = 4;
     const VALID_COLORS = ['R', 'G', 'B', 'Y', 'C', 'M'];
     let isValid = false;
 
-    if (code.length != MAX_LENGTH) {
+    if (Combination.length != MAX_LENGTH) {
+        // cuidado. esta funcion hace dos cosas.
         console.writeln("El código no tiene la longitud adecuada, por favor, introduzca otro.");
         isValid = false;
     } else {
@@ -38,15 +39,15 @@ function validateCode(code) {
     return isValid;
 }
 
-function proposeCode(secretCode) {
+function proposeCombination(secretCombination) {
     let result = false;
     const MAX_ATTEMPTS = 10;
     let attempts = [];
     let blacksAndWhites = [];
     do {
-        attempts[attempts.length] = getCode();
-        blacksAndWhites[blacksAndWhites.length] = getBlacksAndWhites(secretCode, attempts[attempts.length - 1]);
-        if (compareCodes(secretCode, attempts[attempts.length - 1])) {
+        attempts[attempts.length] = getCombination();
+        blacksAndWhites[blacksAndWhites.length] = getBlacksAndWhites(secretCombination, attempts[attempts.length - 1]);
+        if (compareCombinations(secretCombination, attempts[attempts.length - 1])) {
             result = true;
         }
 
@@ -54,9 +55,9 @@ function proposeCode(secretCode) {
     } while (!result && attempts.length < MAX_ATTEMPTS);
 }
 
-function compareCodes(secretCode, proposedCode) {
+function compareCombinations(secretCombination, proposedCombination) {
     let result;
-    if (secretCode === proposedCode) {
+    if (secretCombination === proposedCombination) {
         result = true;
     } else {
         console.writeln("Vuelve a intentarlo");
@@ -66,11 +67,11 @@ function compareCodes(secretCode, proposedCode) {
     return result;
 }
 
-function getBlacksAndWhites(secretCode, proposedCode) {
+function getBlacksAndWhites(secretCombination, proposedCombination) {
     let blacks = 0;
     let whites = 0;
-    for (let i = 0; i < secretCode.length; i++) {
-        if (secretCode[i] === proposedCode[i]) {
+    for (let i = 0; i < secretCombination.length; i++) {
+        if (secretCombination[i] === proposedCombination[i]) {
             blacks++;
         } else {
             whites++;
