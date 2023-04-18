@@ -1,18 +1,17 @@
 const { Console } = require("console-mpds");
 const console = new Console();
 
-let repeat = askIfRepeat();
+let repeat = askIfRepeat(`Quieres iniciar otra partida?`);
 do {
     let game = initGame();
     game.play();
     repeat.ask();
-} while (repeat);
+} while (repeat.isAffirmative);
 
 function initGame() {
     let game = {
         MAX_LENGTH : 4,
         VALID_COLORS : ['R', 'G', 'B', 'Y', 'C', 'M'],
-        isValid : false,
         result: false,
         MAX_ATTEMPTS: 10,
         attempts: [],
@@ -21,22 +20,19 @@ function initGame() {
         play : function () {
             let askCombination = GetValidCombination(game);
             secretCombination = askCombination.getSecretCombination();
+
+            do {
+                console.writeln("Introduzca una combinación");
+                this.attempts[this.attempts.length] = askCombination.getCombination();
+                this.blacksAndWhites[this.blacksAndWhites.length] = getBlacksAndWhites(secretCombination, this.attempts[this.attempts.length - 1]);
+                if (compareCombinations(secretCombination, this.attempts[this.attempts.length - 1])) {
+                    result = true;
+            }
+            showBoard(this.attempts, this.blacksAndWhites);
+            } while (!result);
         }
     }
     return game;
-    function proposeCombination() {
-
-        do {
-            console.writeln("Introduzca una combinación");
-            attempts[attempts.length] = getCombination();
-            blacksAndWhites[blacksAndWhites.length] = getBlacksAndWhites(secretCombination, attempts[attempts.length - 1]);
-            if (compareCombinations(secretCombination, attempts[attempts.length - 1])) {
-                result = true;
-            }
-
-            showBoard(attempts, blacksAndWhites);
-        } while (!result && attempts.length < MAX_ATTEMPTS);
-    }
 
     function compareCombinations(secretCombination, proposedCombination) {
         let result;
@@ -79,23 +75,22 @@ function initGame() {
 }
 
 function GetValidCombination(game) {
-
     combination = {
         getSecretCombination: function () {
             console.writeln("Please, insert the secret Combination");
             do {
-                secretCombination = getCombination();
+                secretCombination = this.getCombination();
             } while (!validateCombination(secretCombination));
             return secretCombination;
-        }
-    }
+        },
 
-    function getCombination() {
-        let Combination;
-        do {
-            Combination = console.readString();
-        } while (!validateCombination(Combination));
-        return Combination;
+        getCombination : function () {
+            let Combination;
+            do {
+                Combination = console.readString();
+            } while (!validateCombination(Combination));
+            return Combination;
+        }
     }
 
     function validateCombination(Combination) {
@@ -113,6 +108,28 @@ function GetValidCombination(game) {
     return combination;
 }
 
-function askIfRepeat() {
-
+function askIfRepeat(question) {
+    return {
+        question : question,
+        answer : ``,
+    
+        ask : function() {
+          let error = false;
+          do {
+            answer = console.readString(this.question);
+            error = !this.isAffirmative() && !this.isNegative();
+            if (error) {
+              console.writeln(`Por favor, responda "si" o "no"`);
+            }
+          } while (error);
+        },
+    
+        isAffirmative : function(){
+          return answer === `si`;
+        },
+    
+        isNegative : function(){
+          return answer === `no`;
+        }
+}
 }
