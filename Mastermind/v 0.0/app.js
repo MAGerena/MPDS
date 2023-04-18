@@ -35,6 +35,7 @@ function validateCombination(Combination) {
     } else {
         isValid = true;
     }
+    // Falta validar los demás requerimientos
 
     return isValid;
 }
@@ -45,6 +46,7 @@ function proposeCombination(secretCombination) {
     let attempts = [];
     let blacksAndWhites = [];
     do {
+        console.writeln("Introduzca una combinación");
         attempts[attempts.length] = getCombination();
         blacksAndWhites[blacksAndWhites.length] = getBlacksAndWhites(secretCombination, attempts[attempts.length - 1]);
         if (compareCombinations(secretCombination, attempts[attempts.length - 1])) {
@@ -74,6 +76,7 @@ function getBlacksAndWhites(secretCombination, proposedCombination) {
         if (secretCombination[i] === proposedCombination[i]) {
             blacks++;
         } else {
+            
             whites++;
         }
     }
