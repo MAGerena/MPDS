@@ -1,47 +1,49 @@
 const { Console } = require("console-mpds");
 const console = new Console();
 
-initMasterMind().play;
+initMastermindView().play();
 
-function initMasterMind() {
+function initMastermindView() {
     return {
-
         play : function () {
-            let repeat = askIfRepeat(`Quieres iniciar otra partida?`);
+            const repeat = askIfRepeat(`Quieres iniciar otra partida?`);
             do {
-                let game = initGame();
-                game.play();
+                initGameView().play();
                 repeat.ask();
             } while (repeat.isAffirmative);
         }
     }
 }
 
-function initGame() {
-    let game = {
-        MAX_LENGTH : 4,
-        VALID_COLORS : ['R', 'G', 'B', 'Y', 'C', 'M'],
-        result: false,
-        MAX_ATTEMPTS: 10,
-        attempts: [],
-        blacksAndWhites: [],
-        
-        play : function () {
-            let askCombination = GetValidCombination(game);
-            secretCombination = askCombination.getSecretCombination();
-
+function initGameView() {
+    const game = initGame();
+    return {
+        play: function () {
+            let askCombination = GetValidCombination();
+            game.secretCombination = askCombination.getSecretCombination();
             do {
                 console.writeln("Introduzca una combinación");
-                this.attempts[this.attempts.length] = askCombination.getCombination();
-                this.blacksAndWhites[this.blacksAndWhites.length] = getBlacksAndWhites(secretCombination, this.attempts[this.attempts.length - 1]);
-                if (compareCombinations(secretCombination, this.attempts[this.attempts.length - 1])) {
+                game.attempts[game.attempts.length] = askCombination.getCombination();
+                game.blacksAndWhites[game.blacksAndWhites.length] = getBlacksAndWhites(game.secretCombination, game.attempts[game.attempts.length - 1]);
+                if (compareCombinations(game.secretCombination, game.attempts[this.attempts.length - 1])) {
                     result = true;
-            }
-            showBoard(this.attempts, this.blacksAndWhites);
-            } while (!result);
+                }
+                showBoard(this.attempts, this.blacksAndWhites);
+            } while (!game.result);
         }
     }
-    return game;
+    
+}
+
+function initGame() {
+    let VALID_COLORS = ['R', 'G', 'B', 'Y', 'C', 'M'];
+    let result = false;
+    let MAX_ATTEMPTS = 10;
+    let attempts = [];
+    let blacksAndWhites = [];
+    let secretCombination;
+    let MAX_LENGTH = 4;    
+}
 
     function compareCombinations(secretCombination, proposedCombination) {
         let result;
@@ -81,10 +83,9 @@ function initGame() {
         }
     }
 
-}
-
 function GetValidCombination(game) {
     combination = {
+
         getSecretCombination: function () {
             console.writeln("Please, insert the secret Combination");
             do {
